@@ -30,6 +30,13 @@ void printSolution(int dist[])
 		printf("%d \t\t %d\n", i, dist[i]);
 }
 
+int sumAllMinDist(int dist[])
+{
+  int total = 0;
+  for (int i = 0; i < V; i++) total += dist[i];
+  return total;
+}
+
 // Function that implements Dijkstra's single source shortest path algorithm
 // for a matriz represented using adjacency matrix representation
 void dijkstra(int src)
@@ -68,7 +75,8 @@ void dijkstra(int src)
 	}
 
 	// print the constructed distance array
-	printSolution(dist);
+  somatorias[src] = sumAllMinDist(dist);
+	// printSolution(dist);
 }
 
 void liberarMemoriaMatriz()
@@ -105,6 +113,7 @@ void lerMatrizPorArquivo()
 
     V = n;
     matriz = (int **)malloc(V * sizeof(int *)); // Cria o vetor que guarda vetores.
+    somatorias = (int *)malloc(V * sizeof(int)); // Cria o vetor que armazena os resultados das somatórias de cada cruzamento.
 
     for (int i = 0; i < V; i++)
     {
@@ -145,6 +154,7 @@ int main()
   for (int vertice = 0; vertice < V; vertice++)
   {
     dijkstra(vertice);
+    printf("Valor total das distâncias mínimas: %d", somatorias[vertice]);
     printf("\n--------\n");
   }
 
