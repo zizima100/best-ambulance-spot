@@ -12,28 +12,29 @@ int *somatorias;
 // the set of vertices not yet included in shortest path tree
 int minDistance(int dist[], bool sptSet[])
 {
-	// Initialize min value
-	int min = INT_MAX, min_index;
+  // Initialize min value
+  int min = INT_MAX, min_index;
 
-	for (int v = 0; v < V; v++)
-		if (sptSet[v] == false && dist[v] <= min)
-			min = dist[v], min_index = v;
+  for (int v = 0; v < V; v++)
+    if (sptSet[v] == false && dist[v] <= min)
+      min = dist[v], min_index = v;
 
-	return min_index;
+  return min_index;
 }
 
 // A utility function to print the constructed distance array
 void printSolution(int dist[])
 {
-	printf("Vertex \t\t Distance from Source\n");
-	for (int i = 0; i < V; i++)
-		printf("%d \t\t %d\n", i, dist[i]);
+  printf("Vertex \t\t Distance from Source\n");
+  for (int i = 0; i < V; i++)
+    printf("%d \t\t %d\n", i, dist[i]);
 }
 
 int sumAllMinDist(int dist[])
 {
   int total = 0;
-  for (int i = 0; i < V; i++) total += dist[i];
+  for (int i = 0; i < V; i++)
+    total += dist[i];
   return total;
 }
 
@@ -41,42 +42,42 @@ int sumAllMinDist(int dist[])
 // for a matriz represented using adjacency matrix representation
 void dijkstra(int src)
 {
-	int dist[V]; // The output array. dist[i] will hold the shortest
-	// distance from src to i
+  int dist[V]; // The output array. dist[i] will hold the shortest
+  // distance from src to i
 
-	bool sptSet[V]; // sptSet[i] will be true if vertex i is included in shortest
-	// path tree or shortest distance from src to i is finalized
+  bool sptSet[V]; // sptSet[i] will be true if vertex i is included in shortest
+  // path tree or shortest distance from src to i is finalized
 
-	// Initialize all distances as INFINITE and stpSet[] as false
-	for (int i = 0; i < V; i++)
-		dist[i] = INT_MAX, sptSet[i] = false;
+  // Initialize all distances as INFINITE and stpSet[] as false
+  for (int i = 0; i < V; i++)
+    dist[i] = INT_MAX, sptSet[i] = false;
 
-	// Distance of source vertex from itself is always 0
-	dist[src] = 0;
+  // Distance of source vertex from itself is always 0
+  dist[src] = 0;
 
-	// Find shortest path for all vertices
-	for (int count = 0; count < V - 1; count++) {
-		// Pick the minimum distance vertex from the set of vertices not
-		// yet processed. u is always equal to src in the first iteration.
-		int u = minDistance(dist, sptSet);
+  // Find shortest path for all vertices
+  for (int count = 0; count < V - 1; count++)
+  {
+    // Pick the minimum distance vertex from the set of vertices not
+    // yet processed. u is always equal to src in the first iteration.
+    int u = minDistance(dist, sptSet);
 
-		// Mark the picked vertex as processed
-		sptSet[u] = true;
+    // Mark the picked vertex as processed
+    sptSet[u] = true;
 
-		// Update dist value of the adjacent vertices of the picked vertex.
-		for (int v = 0; v < V; v++)
+    // Update dist value of the adjacent vertices of the picked vertex.
+    for (int v = 0; v < V; v++)
 
-			// Update dist[v] only if is not in sptSet, there is an edge from
-			// u to v, and total weight of path from src to v through u is
-			// smaller than current value of dist[v]
-			if (!sptSet[v] && matriz[u][v] && dist[u] != INT_MAX
-				&& dist[u] + matriz[u][v] < dist[v])
-				dist[v] = dist[u] + matriz[u][v];
-	}
+      // Update dist[v] only if is not in sptSet, there is an edge from
+      // u to v, and total weight of path from src to v through u is
+      // smaller than current value of dist[v]
+      if (!sptSet[v] && matriz[u][v] && dist[u] != INT_MAX && dist[u] + matriz[u][v] < dist[v])
+        dist[v] = dist[u] + matriz[u][v];
+  }
 
-	// print the constructed distance array
+  // print the constructed distance array
   somatorias[src] = sumAllMinDist(dist);
-	// printSolution(dist);
+  // printSolution(dist);
 }
 
 void liberarMemoriaMatriz()
@@ -112,7 +113,7 @@ void lerMatrizPorArquivo()
     fscanf(arquivo, "%d", &n);
 
     V = n;
-    matriz = (int **)malloc(V * sizeof(int *)); // Cria o vetor que guarda vetores.
+    matriz = (int **)malloc(V * sizeof(int *));  // Cria o vetor que guarda vetores.
     somatorias = (int *)malloc(V * sizeof(int)); // Cria o vetor que armazena os resultados das somatórias de cada cruzamento.
 
     for (int i = 0; i < V; i++)
@@ -145,6 +146,9 @@ int main()
   setlocale(LC_ALL, "portuguese");
   system("clear");
 
+  int minDistSomatorias = INT_MAX;
+  int bestVertice;
+
   lerMatrizPorArquivo();
   imprimirMatriz();
   printf("\nPressione ENTER para calcular a melhor posição para a ambulância. . .");
@@ -154,10 +158,14 @@ int main()
   for (int vertice = 0; vertice < V; vertice++)
   {
     dijkstra(vertice);
-    printf("Valor total das distâncias mínimas: %d", somatorias[vertice]);
-    printf("\n--------\n");
-  }
+    printf("Valor total das distâncias mínimas do vértice %d é: %d.\n", vertice, somatorias[vertice]);
 
+    if (minDistSomatorias > somatorias[vertice])
+    {
+      minDistSomatorias = somatorias[vertice];
+      bestVertice = vertice;
+    }
+  }
+  printf("O melhor cruzamento para inserir a ambulância é o: %d.", bestVertice);
   fecharPrograma();
 }
-
