@@ -7,6 +7,7 @@
 int V;
 int **matriz;
 int *somatorias;
+int *bestVertices;
 
 // A utility function to find the vertex with minimum distance value, from
 // the set of vertices not yet included in shortest path tree
@@ -113,12 +114,14 @@ void lerMatrizPorArquivo()
     fscanf(arquivo, "%d", &n);
 
     V = n;
-    matriz = (int **)malloc(V * sizeof(int *));  // Cria o vetor que guarda vetores.
-    somatorias = (int *)malloc(V * sizeof(int)); // Cria o vetor que armazena os resultados das somatórias de cada cruzamento.
+    // Cria vetores e matrizes de acordo com o tamanho da matriz no arquivo.
+    matriz = (int **)malloc(V * sizeof(int *));
+    somatorias = (int *)malloc(V * sizeof(int));
+    bestVertices = (int *)malloc(V * sizeof(int));
 
     for (int i = 0; i < V; i++)
     {
-      matriz[i] = (int *)malloc(V * sizeof(int)); // Cria outro vetor dentro do primeiro.
+      matriz[i] = (int *)malloc(V * sizeof(int));
       for (int j = 0; j < V; j++)
       {
         fscanf(arquivo, "%d", &matriz[i][j]);
@@ -147,7 +150,7 @@ int main()
   system("clear");
 
   int minDistSomatorias = INT_MAX;
-  int bestVertice;
+  int numberOfSolutions = 0; // Começa com 0, porque trabalha num vertor.
 
   lerMatrizPorArquivo();
   imprimirMatriz();
@@ -158,14 +161,32 @@ int main()
   for (int vertice = 0; vertice < V; vertice++)
   {
     dijkstra(vertice);
-    printf("Valor total das distâncias mínimas do vértice %d é: %d.\n", vertice, somatorias[vertice]);
+    printf("Valor total das distâncias mínimas do cruzamento %d é: %d.\n", vertice, somatorias[vertice]);
 
-    if (minDistSomatorias > somatorias[vertice])
+    if (minDistSomatorias == somatorias[vertice])
     {
+      numberOfSolutions++;
+      bestVertices[numberOfSolutions] = vertice;
+    }
+    else if (minDistSomatorias > somatorias[vertice])
+    {
+      numberOfSolutions = 0;
       minDistSomatorias = somatorias[vertice];
-      bestVertice = vertice;
+      bestVertices[0] = vertice;
     }
   }
-  printf("O melhor cruzamento para inserir a ambulância é o: %d.", bestVertice);
+
+  if (numberOfSolutions == 0)
+  {
+    printf("O melhor cruzamento para inserir a ambulância é o: %d.", bestVertices[0]);
+  }
+  else
+  {
+    printf("Os melhores curzamentos para inserir a ambulância são:\n");
+    for (int i = 0; i <= numberOfSolutions; i++)
+    {
+      printf("Cruzamento: %d.", bestVertices[i]);
+    }
+  }
   fecharPrograma();
 }
