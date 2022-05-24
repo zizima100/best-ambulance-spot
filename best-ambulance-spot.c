@@ -77,6 +77,9 @@ int main()
   imprimirMatriz();
   printf("\nPressione ENTER para calcular a melhor posição para a ambulância. . .");
   getchar();
+  system("clear");
+
+  
 
   fecharPrograma();
 }
