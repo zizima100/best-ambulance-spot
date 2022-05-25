@@ -1,3 +1,7 @@
+// Júlio - 20116091
+// Vinícius - 20128187
+// Lucas - 20152146
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
